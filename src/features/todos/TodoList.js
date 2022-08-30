@@ -47,6 +47,14 @@ const TodoList = () => {
     },
   });
 
+  const editTodoMutation = useMutation(editTodo, {
+    onSuccess: (data) => {
+      setIsEdit(!isEdit);
+      console.log('data!!!!!', data);
+      queryClient.invalidateQueries('todos');
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
     addTodoMutation.mutate({
@@ -56,14 +64,6 @@ const TodoList = () => {
     });
   };
 
-  const editTodoMutation = useMutation(editTodo, {
-    onSuccess: (data) => {
-      setIsEdit(!isEdit);
-      console.log('data!!!!!', data);
-      queryClient.invalidateQueries('todos');
-    },
-  });
-
   const handleEditTodo = (todo) => {
     setIsEdit(true);
     setClickedId(todo.id);
@@ -72,10 +72,11 @@ const TodoList = () => {
     editTodoMutation.mutate({ id: clickedId, title: todo.title });
   };
 
-  // const handleEditMode = ({ id }) => {
-  //   setIsEdit(true);
-  //   setClickedId(id);
-  // };
+  const handleEditMode = ({ id, title }) => {
+    setIsEdit(true);
+    setClickedId(id);
+    setChangeTodo(title);
+  };
 
   const handleNewTodoChange = (e) => {
     setNewTodo(e.target.value);
@@ -115,11 +116,23 @@ const TodoList = () => {
             )}
           </div>
           <div>
-            <button
-              onClick={() => handleEditTodo({ id: todo.id, title: changeTodo })}
-            >
-              {isEdit && clickedId === todo.id ? '제출하기' : '수정'}
-            </button>
+            {isEdit && clickedId === todo.id ? (
+              <button
+                onClick={() =>
+                  handleEditTodo({ id: todo.id, title: changeTodo })
+                }
+              >
+                제출하기
+              </button>
+            ) : (
+              <button
+                onClick={() =>
+                  handleEditMode({ id: todo.id, title: todo.title })
+                }
+              >
+                수정
+              </button>
+            )}
 
             <button onClick={() => deleteTodoMutation.mutate({ id: todo.id })}>
               삭제
