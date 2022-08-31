@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { updateTodo, editTodo, deleteTodo } from '../../api/todosApi';
 import { useState } from 'react';
 
@@ -19,7 +19,6 @@ const Todo = ({ todo }) => {
   const editTodoMutation = useMutation(editTodo, {
     onSuccess: (data) => {
       setIsEdit(!isEdit);
-      // console.log('edit data!!!!!', data);
       queryClient.invalidateQueries('todos');
     },
   });
