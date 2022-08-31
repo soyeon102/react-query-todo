@@ -10,20 +10,20 @@ const Todo = ({ todo }) => {
   const [clickedId, setClickedId] = useState('');
   const [changeTodo, setChangeTodo] = useState('');
 
-  const updateTodoMutation = useMutation(updateTodo, {
-    onSuccess: () => {
+  const { mutate: updateTodoMutation } = useMutation(updateTodo, {
+    onSuccess: (data) => {
       queryClient.invalidateQueries('todos');
     },
   });
 
-  const editTodoMutation = useMutation(editTodo, {
-    onSuccess: (data) => {
+  const { mutate: editTodoMutation } = useMutation(editTodo, {
+    onSuccess: () => {
       setIsEdit(!isEdit);
       queryClient.invalidateQueries('todos');
     },
   });
 
-  const deleteTodoMutation = useMutation(deleteTodo, {
+  const { mutate: deleteTodoMutation } = useMutation(deleteTodo, {
     onSuccess: () => {
       queryClient.invalidateQueries('todos');
     },
@@ -32,9 +32,7 @@ const Todo = ({ todo }) => {
   const handleEditTodo = (todo) => {
     setIsEdit(true);
     setClickedId(todo.id);
-
-    console.log('edit!!!', { id: clickedId, title: todo.title });
-    editTodoMutation.mutate({ id: clickedId, title: todo.title });
+    editTodoMutation({ id: clickedId, title: todo.title });
   };
 
   const handleEditMode = ({ id, title }) => {
@@ -51,7 +49,7 @@ const Todo = ({ todo }) => {
           checked={todo.completed}
           id={todo.id}
           onChange={() =>
-            updateTodoMutation.mutate({
+            updateTodoMutation({
               ...todo,
               completed: !todo.completed,
             })
@@ -83,7 +81,7 @@ const Todo = ({ todo }) => {
           </button>
         )}
 
-        <button onClick={() => deleteTodoMutation.mutate({ id: todo.id })}>
+        <button onClick={() => deleteTodoMutation({ id: todo.id })}>
           삭제
         </button>
       </div>
