@@ -1,5 +1,6 @@
 import React from 'react';
 import NewTodo from './NewTodo';
+import Todo from './Todo';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import {
   getTodos,
@@ -90,54 +91,9 @@ const TodoList = () => {
   } else {
     content = todos.map((todo) => {
       return (
-        <article key={todo.id}>
-          <div>
-            <input
-              type='checkbox'
-              checked={todo.completed}
-              id={todo.id}
-              onChange={() =>
-                updateTodoMutation.mutate({
-                  ...todo,
-                  completed: !todo.completed,
-                })
-              }
-            />
-
-            {isEdit && clickedId === todo.id ? (
-              <input
-                value={changeTodo}
-                placeholder='수정할 내용을 입력해주세요'
-                onChange={(e) => setChangeTodo(e.target.value)}
-              />
-            ) : (
-              <label htmlFor={todo.id}>{todo.title}</label>
-            )}
-          </div>
-          <div>
-            {isEdit && clickedId === todo.id ? (
-              <button
-                onClick={() =>
-                  handleEditTodo({ id: todo.id, title: changeTodo })
-                }
-              >
-                제출하기
-              </button>
-            ) : (
-              <button
-                onClick={() =>
-                  handleEditMode({ id: todo.id, title: todo.title })
-                }
-              >
-                수정
-              </button>
-            )}
-
-            <button onClick={() => deleteTodoMutation.mutate({ id: todo.id })}>
-              삭제
-            </button>
-          </div>
-        </article>
+        <React.Fragment key={todo.id}>
+          <Todo todo={todo} />
+        </React.Fragment>
       );
     });
   }
