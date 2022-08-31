@@ -29,7 +29,6 @@ const TodoList = () => {
 
   const addTodoMutation = useMutation(addTodo, {
     onSuccess: (data) => {
-      console.log('addTodoMutation 의 성공 data', data);
       queryClient.invalidateQueries('todos');
       setNewTodo('');
     },
@@ -50,7 +49,7 @@ const TodoList = () => {
   const editTodoMutation = useMutation(editTodo, {
     onSuccess: (data) => {
       setIsEdit(!isEdit);
-      console.log('data!!!!!', data);
+      // console.log('edit data!!!!!', data);
       queryClient.invalidateQueries('todos');
     },
   });
@@ -151,7 +150,6 @@ const TodoList = () => {
         handleNewTodoChange={handleNewTodoChange}
         newTodo={newTodo}
       />
-      {/* {newItemSection} */}
       {content}
     </main>
   );
